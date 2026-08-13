@@ -86,4 +86,4 @@ If missing, update the `$HeliumBase` variable at the top of the script to the co
 
 ## License
 
-Up to you to specify (MIT, none, etc.)
+This project is licensed under the [MIT License](LICENSE).
