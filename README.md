@@ -1,32 +1,32 @@
 # Helium Fix DRM
 
-Script PowerShell qui restaure la lecture DRM (Widevine) dans [Helium](https://github.com/imputnet/helium) sur Windows.
+PowerShell script that restores Widevine DRM playback in [Helium](https://github.com/imputnet/helium) on Windows.
 
-Le script télécharge le dernier installateur Chrome offline, en extrait `WidevineCdm`, puis le copie dans le dossier d'application de Helium.
+The script downloads the latest Chrome offline installer, extracts `WidevineCdm`, and copies it into Helium's application folder.
 
-> ⚠️ Ce fix permet de charger le module Widevine dans Helium, mais certains services de streaming stricts (Netflix, Crunchyroll...) peuvent encore refuser la lecture même avec le CDM présent — ces plateformes vérifient l'intégrité du navigateur au-delà de la simple présence du fichier CDM. Fonctionne mieux sur des services moins stricts (YouTube, etc.).
+> ⚠️ This fix loads the Widevine module into Helium, but some strict streaming services (Netflix, Crunchyroll...) may still refuse playback even with the CDM present — these platforms check browser integrity beyond just the CDM file being there. Works better on less strict services (YouTube, etc.).
 
-## Prérequis
+## Requirements
 
 - Windows
-- [Helium](https://github.com/imputnet/helium) installé sous `C:\Program Files\imput\Helium`
+- [Helium](https://github.com/imputnet/helium) installed under `C:\Program Files\imput\Helium`
 - [7-Zip](https://www.7-zip.org/)
-- Accès Internet (pour récupérer l'installateur Chrome)
-- Droits d'écriture dans `C:\Program Files` (PowerShell en administrateur)
+- Internet access (to fetch the Chrome installer)
+- Permission to write under `C:\Program Files` (run PowerShell as Administrator)
 
-## Installation rapide (curl-style)
+## Quick install (curl-style)
 
-Ouvre **PowerShell en tant qu'administrateur**, puis lance directement :
+Open **PowerShell as Administrator**, then run directly:
 
 ```powershell
 irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1 | iex
 ```
 
-Cette commande télécharge et exécute le script en une seule ligne, sans avoir besoin de cloner le repo.
+This downloads and runs the script in one line, no need to clone the repo.
 
-### Avec l'option `-Force` (réécrase une install existante)
+### With the `-Force` flag (overwrite an existing install)
 
-`irm | iex` ne transmet pas d'arguments directement, donc pour utiliser `-Force` ou `-KeepTemp`, télécharge le script d'abord :
+`irm | iex` doesn't pass arguments directly, so to use `-Force` or `-KeepTemp`, download the script first:
 
 ```powershell
 irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1 -OutFile HeliumFixDRM.ps1
@@ -34,7 +34,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\HeliumFixDRM.ps1 -Force
 ```
 
-## Installation manuelle (clone du repo)
+## Manual install (clone the repo)
 
 ```powershell
 git clone https://github.com/da0t-exe/Helium-Fix-DRM.git
@@ -43,47 +43,47 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\HeliumFixDRM.ps1
 ```
 
-### Options disponibles
+### Available options
 
-| Option | Effet |
+| Option | Effect |
 |---|---|
-| *(aucune)* | Installe le CDM seulement s'il n'existe pas déjà |
-| `-Force` | Réécrase un CDM déjà présent |
-| `-KeepTemp` | Conserve les fichiers temporaires extraits (debug) |
+| *(none)* | Installs the CDM only if it doesn't already exist |
+| `-Force` | Overwrites an existing CDM |
+| `-KeepTemp` | Keeps extracted temp files (debugging) |
 
-Exemple :
+Example:
 ```powershell
 .\HeliumFixDRM.ps1 -Force
 ```
 
-## Après l'exécution
+## After running
 
-1. Ferme complètement Helium (vérifie qu'aucun processus ne tourne encore en arrière-plan)
-2. Relance Helium, ou va sur `helium://restart/`
-3. Vérifie que le module est chargé : `helium://components`
-4. Teste la lecture sur un flux DRM, par exemple : `https://bitmovin.com/demos/drm`
+1. Fully close Helium (make sure no process is still running in the background)
+2. Relaunch Helium, or go to `helium://restart/`
+3. Check the module is loaded: `helium://components`
+4. Test playback on a DRM stream, e.g.: `https://bitmovin.com/demos/drm`
 
-## Dépannage
+## Troubleshooting
 
-**`Access is denied` lors de la copie**
-→ PowerShell n'est pas lancé en administrateur. Ferme la fenêtre, relance-la avec "Run as administrator".
+**`Access is denied` when copying**
+→ PowerShell isn't running as Administrator. Close the window, relaunch it with "Run as administrator".
 
 **`Error: Helium not found`**
-→ Ton install de Helium n'est pas dans `C:\Program Files\imput\Helium`. Vérifie le vrai chemin avec :
+→ Your Helium install isn't under `C:\Program Files\imput\Helium`. Check the real path with:
 ```powershell
 Get-ChildItem "C:\Program Files\imput\Helium\Application" -ErrorAction SilentlyContinue
 ```
-Si absent, adapte la variable `$HeliumBase` en haut du script vers le bon chemin (souvent `%LOCALAPPDATA%\imput\Helium\Application` selon le mode d'installation).
+If missing, update the `$HeliumBase` variable at the top of the script to the correct path (often `%LOCALAPPDATA%\imput\Helium\Application` depending on install mode).
 
 **`Error: 7-Zip not found`**
-→ Installe 7-Zip depuis [7-zip.org](https://www.7-zip.org/) avec les options par défaut.
+→ Install 7-Zip from [7-zip.org](https://www.7-zip.org/) with default options.
 
-**Widevine reste sur `Status: New` ou `0.0.0.0` dans `helium://components`**
-→ Comportement normal même après une installation réussie ; l'important est que `bitmovin.com/demos/drm` détecte bien "Widevine" et non "No DRM".
+**Widevine stays at `Status: New` or `0.0.0.0` in `helium://components`**
+→ This is normal even after a successful install; what matters is that `bitmovin.com/demos/drm` detects "Widevine" instead of "No DRM".
 
-**Certains sites (Netflix, Crunchyroll) refusent toujours la lecture**
-→ Limite connue. Ces plateformes appliquent une vérification d'intégrité du navigateur (Verified Media Path) que la simple présence du CDM ne satisfait pas sur un navigateur non certifié par Google. Pas de solution connue côté client à ce jour.
+**Some sites (Netflix, Crunchyroll) still refuse playback**
+→ Known limitation. These platforms enforce a browser integrity check (Verified Media Path) that simply having the CDM present doesn't satisfy on a non-Google-certified browser. No known client-side fix at this time.
 
-## Licence
+## License
 
-À toi de préciser selon ce que tu veux (MIT, aucune, etc.)
+Up to you to specify (MIT, none, etc.)
