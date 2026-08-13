@@ -33,4 +33,4 @@ Keep extracted temp files for debugging:
 
 Then restart Helium (`helium://restart/`) and test a DRM stream.
 
-Close Helium first if `-Force` needs to replace `WidevineCdm`
+Close Helium first if `-Force` needs to replace `WidevineCdm`.
