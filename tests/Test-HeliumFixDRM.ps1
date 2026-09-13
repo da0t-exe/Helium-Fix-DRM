@@ -49,7 +49,7 @@ try {
         $downloadInput.Position = 0
         $downloadOutput.SetLength(0)
         Copy-DownloadStream $downloadInput $downloadOutput -1 ([Threading.CancellationToken]::None)
-        Assert ($progressEvents[0].Percent -eq -1 -and $progressEvents[0].Status -match 'Mio') 'Unknown length must show bytes without a made-up percentage.'
+        Assert ($progressEvents[0].Percent -eq -1 -and $progressEvents[0].Status -match 'MiB') 'Unknown length must show bytes without a made-up percentage.'
         $downloadInput.Position = 0
         Assert-Throws { Copy-DownloadStream $downloadInput $downloadOutput ($payload.Length + 1) ([Threading.CancellationToken]::None) } 'Incomplete Chrome download'
         $downloadInput.Position = 0

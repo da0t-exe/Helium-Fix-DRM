@@ -1,97 +1,97 @@
 # Helium Fix DRM
 
-**Installer et maintenir Widevine dans Helium sous Windows, depuis PowerShell.**
+**Install and maintain Widevine in Helium on Windows with PowerShell.**
 
-Interface console courte, téléchargement avec barre de progression, validation des fichiers Google et sauvegarde avant remplacement.
+A simple console interface, download progress, Google signature verification, and backups before replacement.
 
-> Widevine peut permettre la lecture sur certains services. Ce script ne corrige pas le refus Netflix observé dans Helium et ne garantit pas sa compatibilité.
+> This script does not fix the Netflix license rejection observed in Helium or guarantee Netflix compatibility.
 
-## Installer ou mettre à jour
+## Install or update
 
-Ferme Helium, ouvre PowerShell, puis colle :
+Close Helium, open PowerShell, and paste:
 
 ```powershell
 irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1 | iex
 ```
 
-Le script détecte Helium et cherche Widevine dans Chrome. Il compare les versions et installe seulement si le module est absent, invalide ou plus ancien. Il ne rétrograde pas une version valide sans `-Force`.
+The script detects Helium and looks for Widevine in Chrome. It installs only when the existing module is missing, invalid, or older. It does not downgrade a valid version without `-Force`.
 
-Si Chrome ne fournit aucun module valide, il télécharge l'installateur officiel Google et en extrait Widevine avec **7-Zip**, sans exécuter cet installateur. La barre indique le pourcentage, les Mio reçus et le débit ; sans taille annoncée par le serveur, elle affiche uniquement le volume et le débit.
+If Chrome provides no valid module, the script downloads the official Google installer and extracts Widevine with **7-Zip**, without running the installer. Progress shows the percentage, MiB received, and transfer speed. If the server provides no total size, only the received size and speed are shown.
 
-**Prérequis :** Windows, PowerShell 5.1 ou 7, Helium et Chrome installé, ou 7-Zip avec Internet pour l'extraction automatique x64. Pour ARM64/x86, utilise une source locale de même architecture. Une installation Helium dans Program Files peut nécessiter des droits administrateur.
+**Requirements:** Windows, PowerShell 5.1 or 7, Helium, and either Chrome installed or 7-Zip with Internet access for automatic x64 extraction. For ARM64/x86, provide a local source with matching architecture. Helium installations in Program Files may require administrator permissions.
 
-## Activer les mises à jour automatiques
+## Enable automatic updates
 
-Garde Chrome installé et à jour, puis exécute une fois :
+Keep Chrome installed and up to date, then run once:
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1))) -EnableAutoUpdate
 ```
 
-Une tâche Windows vérifie le Widevine de Chrome **à l'ouverture de session et chaque jour à midi**, lorsque ta session est ouverte. Elle copie une version plus récente dans Helium et détecte ses nouveaux dossiers de version. Si Helium est ouvert, elle reporte l'opération au prochain passage ; elle ne ferme jamais le navigateur.
+A Windows task checks Chrome's Widevine **at sign-in and daily at noon**, while you are signed in. It copies newer versions into Helium and detects new Helium version folders. If Helium is running, the update is deferred until the next run; the task never closes the browser.
 
-- Chrome récupère ses mises à jour officielles ; la tâche synchronise les fichiers disponibles localement. Elle ne vérifie pas indépendamment la dernière version mondiale de Widevine.
-- Sans Chrome valide, aucune installation automatique n'a lieu. Relance la commande manuelle pour utiliser le téléchargement Google.
-- La tâche fonctionne avec les droits de ton compte, sans élévation. Elle convient à Helium installé dans ton profil utilisateur.
-- La copie locale du script est enregistrée dans `%LOCALAPPDATA%\HeliumFixDRM`. La tâche n'exécute pas de nouveau code téléchargé à chaque passage. Relance la commande d'activation pour mettre cette copie à jour.
-- Le résultat du dernier passage est dans `%LOCALAPPDATA%\HeliumFixDRM\update.log`. Le Planificateur de tâches affiche aussi son état sous `HeliumWidevine-<SID utilisateur>`.
+- Chrome downloads its official updates; the task synchronizes files available locally. It does not independently check the latest Widevine release worldwide.
+- Without a valid Chrome module, no automatic installation occurs. Run the manual command to use the Google download instead.
+- The task runs with your account permissions, without elevation. It is intended for Helium installed in your user profile.
+- The script is saved in `%LOCALAPPDATA%\HeliumFixDRM`. The task does not download new script code on each run. Run the enable command again to update this local copy.
+- The latest run is logged to `%LOCALAPPDATA%\HeliumFixDRM\update.log`. Task Scheduler shows its status under `HeliumWidevine-<user SID>`.
 
-Pour désactiver la tâche, sans retirer Widevine :
+To disable the task without removing Widevine:
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1))) -DisableAutoUpdate
 ```
 
-## Options utiles
+## Useful options
 
-Télécharge le script pour utiliser les options localement :
+Download the script to use its options locally:
 
 ```powershell
 irm https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/main/HeliumFixDRM.ps1 -OutFile HeliumFixDRM.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\HeliumFixDRM.ps1 -Diagnose
 ```
 
-`-ExecutionPolicy Bypass` ne concerne que ce processus. Les commandes distantes exécutent le code publié sur `main` ; remplace `main` par un identifiant de commit pour fixer une version.
+`-ExecutionPolicy Bypass` applies only to that process. Remote commands execute the code published on `main`; replace `main` with a commit ID to pin a version.
 
-| Option | Effet |
+| Option | Effect |
 | --- | --- |
-| `-Diagnose` | Vérifier les fichiers installés sans les modifier. |
-| `-SourcePath 'D:\WidevineCdm'` | Installer une source précise si plus récente ; sans téléchargement. |
-| `-Force` | Réinstaller, y compris une version plus ancienne pour revenir en arrière. |
-| `-HeliumPath 'D:\Helium\Application'` | Choisir une installation personnalisée ; fonctionne aussi avec l'activation automatique. |
-| `-LocalOnly` | Chercher uniquement dans Chrome, sans téléchargement. |
-| `-WhatIf` | Simuler l'action, sans installer ni créer de tâche. |
-| `-Verbose` | Afficher le chemin source et son SHA256. |
-| `-KeepTemp` | Garder l'installateur téléchargé et son extraction pour diagnostic. |
-| `-Netflix` | Ouvrir Netflix dans une fenêtre Edge ou Chrome distincte. |
+| `-Diagnose` | Verify installed files without changing them. |
+| `-SourcePath 'D:\WidevineCdm'` | Install a specific source if newer, without downloading. |
+| `-Force` | Reinstall, including an older version for rollback. |
+| `-HeliumPath 'D:\Helium\Application'` | Select a custom installation; also supported when enabling automatic updates. |
+| `-LocalOnly` | Search local Chrome installations without downloading. |
+| `-WhatIf` | Preview the action without installing files or creating a task. |
+| `-Verbose` | Show the source path and SHA256 hash. |
+| `-KeepTemp` | Keep the installer and extracted files for troubleshooting. |
+| `-Netflix` | Open Netflix in a separate Edge or Chrome window. |
 
-Les options d'activation/désactivation automatique sont des actions séparées. `-Unattended` est destiné à la tâche : il journalise le dernier passage et reporte l'installation si Helium est ouvert.
+Enabling and disabling automatic updates are separate actions. `-Unattended` is intended for the task: it logs the latest run and defers installation if Helium is running.
 
-## Vérification et sauvegarde
+## Verification and backups
 
-Le script contrôle l'architecture PE, le manifeste et la signature Authenticode Google du CDM. Il vérifie également la signature de l'installateur téléchargé. Les nouveaux fichiers sont copiés et validés avant remplacement. L'ancienne version reste dans `WidevineCdm.backup-…` et est restaurée si le déplacement final échoue.
+The script checks the CDM's PE architecture, manifest, and Google Authenticode signature. It also verifies the downloaded installer's signature. New files are staged and validated before replacement. The previous version remains in `WidevineCdm.backup-...` and is restored if the final move fails.
 
-Les sauvegardes ne sont pas supprimées automatiquement. Pour revenir en arrière, ferme Helium et utilise `-SourcePath` avec le dossier de sauvegarde et `-Force`.
+Backups are not deleted automatically. To roll back, close Helium and use `-SourcePath` with the backup folder and `-Force`.
 
-Après installation, redémarre Helium et teste une vidéo chiffrée, par exemple la [démo DRM Bitmovin](https://bitmovin.com/demos/drm). La présence du CDM dans `chrome://media-internals` ne prouve pas qu'un service acceptera sa demande de licence.
+After installation, restart Helium and test an encrypted video, such as the [Bitmovin DRM demo](https://bitmovin.com/demos/drm). A CDM entry in `chrome://media-internals` does not prove a service will accept its license request.
 
 ## Netflix
 
-Lors des essais de septembre 2026, Chrome a lu Netflix avec Widevine 4.10.3112.0, mais Helium a continué à recevoir des refus de licence avec cette même version. Ce dépôt fournit un installateur de CDM, pas une correction démontrée de ce refus. Il ne modifie pas les contrôles du service.
+During September 2026 testing, Chrome played Netflix with Widevine 4.10.3112.0, while Helium continued to receive license rejections with the same version. This repository provides a CDM installer, not a demonstrated fix for that rejection. It does not modify the service's protection checks.
 
-L'option `-Netflix` ouvre réellement Edge, ou Chrome si Edge est absent, sans changer le navigateur par défaut.
+The `-Netflix` option opens Edge, or Chrome if Edge is unavailable, without changing your default browser.
 
-Références : [demande DRM Helium](https://github.com/imputnet/helium/issues/116), [navigateurs pris en charge par Netflix](https://help.netflix.com/en/node/30081).
+References: [Helium DRM request](https://github.com/imputnet/helium/issues/116), [Netflix supported browsers](https://help.netflix.com/en/node/30081).
 
-## Développement
+## Development
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\Test-HeliumFixDRM.ps1
 pwsh -NoProfile -File .\tests\Test-HeliumFixDRM.ps1
 ```
 
-Les tests vérifient la sélection de version, l'absence de rétrogradation automatique, les sauvegardes, la restauration, les téléchargements, la simulation et l'exécution via `iex`. Ils utilisent des fichiers synthétiques et ne prouvent pas la lecture Netflix.
+Tests cover version selection, prevention of automatic downgrades, backups, rollback, downloads, dry runs, and execution through `iex`. They use synthetic files and do not verify Netflix playback.
 
-## Licence
+## License
 
-[MIT](LICENSE). Aucun binaire Widevine n'est redistribué dans le dépôt.
+[MIT](LICENSE). No Widevine binaries are redistributed in this repository.

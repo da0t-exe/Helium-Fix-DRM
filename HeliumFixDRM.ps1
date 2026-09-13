@@ -25,7 +25,7 @@ function Set-CdmAutoUpdate([string]$Content, [string]$CustomHeliumPath, [bool]$D
     if ($Disable) {
         $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
         if ($task) { Unregister-ScheduledTask -TaskName $taskName -Confirm:$false }
-        Write-Host 'Mises a jour automatiques desactivees.' -ForegroundColor Green
+        Write-Host 'Automatic updates disabled.' -ForegroundColor Green
         return
     }
     $updateRoot = Join-Path $env:LOCALAPPDATA 'HeliumFixDRM'
@@ -44,9 +44,9 @@ function Set-CdmAutoUpdate([string]$Content, [string]$CustomHeliumPath, [bool]$D
     $triggers = @((New-ScheduledTaskTrigger -AtLogOn -User $identity.Name), (New-ScheduledTaskTrigger -Daily -At '12:00'))
     $principal = New-ScheduledTaskPrincipal -UserId $identity.Name -LogonType Interactive -RunLevel Limited
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 10)
-    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $triggers -Principal $principal -Settings $settings -Description 'Synchronise Widevine depuis Chrome lorsque Helium est ferme.' -Force | Out-Null
-    Write-Host 'Mises a jour actives : a la connexion et chaque jour a midi, depuis Chrome.' -ForegroundColor Green
-    Write-Host "Journal : $updateRoot\update.log"
+    Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $triggers -Principal $principal -Settings $settings -Description 'Synchronizes Widevine from Chrome while Helium is closed.' -Force | Out-Null
+    Write-Host 'Automatic updates enabled: from Chrome at sign-in and daily at noon.' -ForegroundColor Green
+    Write-Host "Log: $updateRoot\update.log"
 }
 
 function Get-PeArchitecture([string]$Path) {
@@ -127,17 +127,17 @@ function Copy-DownloadStream($InputStream, $OutputStream, [long]$Length, $Cancel
         if ($timer.ElapsedMilliseconds - $lastUpdate -ge 200) {
             $speed = $received / 1MB / [Math]::Max($timer.Elapsed.TotalSeconds, 0.001)
             $percent = -1
-            $status = '{0:N1} Mio recus | {1:N1} Mio/s' -f ($received / 1MB), $speed
+            $status = '{0:N1} MiB recus | {1:N1} MiB/s' -f ($received / 1MB), $speed
             if ($Length -gt 0) {
                 $percent = [int][Math]::Min(99, [Math]::Floor(100.0 * $received / $Length))
-                $status = '{0}% | {1:N1} / {2:N1} Mio | {3:N1} Mio/s' -f $percent, ($received / 1MB), ($Length / 1MB), $speed
+                $status = '{0}% | {1:N1} / {2:N1} MiB | {3:N1} MiB/s' -f $percent, ($received / 1MB), ($Length / 1MB), $speed
             }
-            Write-Progress -Id 1 -Activity 'Telechargement de Chrome' -Status $status -PercentComplete $percent
+            Write-Progress -Id 1 -Activity 'Downloading Chrome' -Status $status -PercentComplete $percent
             $lastUpdate = $timer.ElapsedMilliseconds
         }
     }
     if ($Length -ge 0 -and $received -ne $Length) { throw "Incomplete Chrome download: expected $Length bytes, received $received." }
-    Write-Progress -Id 1 -Activity 'Telechargement de Chrome' -Status 'Telechargement termine' -PercentComplete 100
+    Write-Progress -Id 1 -Activity 'Downloading Chrome' -Status 'Download complete' -PercentComplete 100
 }
 
 function Get-FileWithProgress([uri]$Uri, [string]$Destination) {
@@ -150,7 +150,7 @@ function Get-FileWithProgress([uri]$Uri, [string]$Destination) {
     # This deadline includes the streamed body, not just the response headers.
     $cancellation.CancelAfter(300000)
     try {
-        Write-Progress -Id 1 -Activity 'Telechargement de Chrome' -Status 'Connexion au serveur Google...' -PercentComplete -1
+        Write-Progress -Id 1 -Activity 'Downloading Chrome' -Status 'Connecting to Google...' -PercentComplete -1
         $response = $client.GetAsync($Uri, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead, $cancellation.Token).GetAwaiter().GetResult()
         [void]$response.EnsureSuccessStatusCode()
         $length = if ($null -ne $response.Content.Headers.ContentLength) { [long]$response.Content.Headers.ContentLength } else { -1L }
@@ -163,7 +163,7 @@ function Get-FileWithProgress([uri]$Uri, [string]$Destination) {
         if ($response) { $response.Dispose() }
         $client.Dispose()
         $cancellation.Dispose()
-        Write-Progress -Id 1 -Activity 'Telechargement de Chrome' -Completed
+        Write-Progress -Id 1 -Activity 'Downloading Chrome' -Completed
     }
 }
 
@@ -183,9 +183,9 @@ function Get-ChromeCdm([string]$TempDirectory, [string]$Architecture) {
     if ($uri.Scheme -ne 'https' -or $uri.DnsSafeHost -notmatch '(^|\.)(google\.com|gvt1\.com|googleapis\.com)$') { throw 'Unexpected Chrome download host.' }
     $installer = Join-Path $TempDirectory $fileName
     Get-FileWithProgress $uri $installer
-    Write-Host 'Verification de la signature Google...'
+    Write-Host 'Verifying the Google signature...'
     Assert-GoogleSignature $installer
-    Write-Host 'Extraction de Widevine...'
+    Write-Host 'Extracting Widevine...'
     $extracted = Join-Path $TempDirectory 'Extracted'
     & $sevenZip.Source x $installer "-o$extracted" -y | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "7-Zip failed: $LASTEXITCODE" }
@@ -265,7 +265,7 @@ function Get-NetflixBrowser {
     try {
     Write-Host ''
     Write-Host '  HELIUM | Widevine' -ForegroundColor Cyan
-    Write-Host '  Installation et mise a jour' -ForegroundColor DarkGray
+    Write-Host '  Install and update' -ForegroundColor DarkGray
     Write-Host ''
     if ($Netflix) {
         if ($Diagnose -or $SourcePath -or $Force -or $KeepTemp -or $HeliumPath -or $LocalOnly -or $Unattended) { throw '-Netflix is a separate action; do not combine it with installation options.' }
@@ -300,7 +300,7 @@ function Get-NetflixBrowser {
         $processPath -and $processPath.StartsWith($appRoot.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase)
     })
     if ($running.Count) {
-        if ($Unattended) { Write-Host 'Helium est ouvert : mise a jour reportee au prochain passage.'; return }
+        if ($Unattended) { Write-Host 'Helium is running: update deferred until the next run.'; return }
         throw 'Close Helium completely, including background processes, then run again.'
     }
     $tempDirectory = $null
@@ -308,19 +308,19 @@ function Get-NetflixBrowser {
         if ($SourcePath) { $source = Get-CdmInfo (Resolve-Path -LiteralPath $SourcePath).Path $architecture }
         else { $source = Get-LocalChromeCdm $architecture }
         if (-not $source) {
-            if ($LocalOnly) { Write-Host 'Aucun Widevine valide dans Chrome. Ouvrez ou mettez a jour Chrome, puis relancez.'; return }
+            if ($LocalOnly) { Write-Host 'No valid Widevine found in Chrome. Open or update Chrome, then run again.'; return }
             $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
             $tempDirectory = Join-Path $tempRoot ('HeliumWidevine-' + [guid]::NewGuid().ToString('N'))
             New-Item -ItemType Directory -Path $tempDirectory | Out-Null
             $source = Get-ChromeCdm $tempDirectory $architecture
         }
-        Write-Host "Version disponible : $($source.Version)" -ForegroundColor Cyan
+        Write-Host "Available version: $($source.Version)" -ForegroundColor Cyan
         Write-Verbose "Source: $($source.Path) | SHA256 $($source.SHA256)"
         if (-not (Test-CdmUpdateNeeded $installed $source ([bool]$Force))) {
-            Write-Host "Widevine est deja a jour ($($installed.Version)) pour cette source." -ForegroundColor Green
+            Write-Host "Widevine is already up to date ($($installed.Version)) for this source." -ForegroundColor Green
             return
         }
-        Write-Host 'Installation avec sauvegarde...'
+        Write-Host 'Installing with a backup...'
         Install-Cdm $source.Path $directory $architecture
     } finally {
         if ($tempDirectory -and (Test-Path -LiteralPath $tempDirectory)) {
