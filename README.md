@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://helium.computer">
-    <img src="https://raw.githubusercontent.com/imputnet/helium/24409ea1dd0da4603aa87296f499370dfa4d5849/resources/branding/product_logo.svg" width="96" height="96" alt="Helium browser logo">
+    <img src="assets/helium.png" width="96" height="96" alt="Helium browser logo">
   </a>
 </p>
 
@@ -189,6 +189,6 @@ The custom PNG buttons are static navigation graphics. Click Tests / CI to see l
 </details>
 ## Credits and license
 
-Helium and its logo belong to the [Helium project by imput](https://github.com/imputnet/helium). The logo above is referenced from its official repository. This utility is not affiliated with or endorsed by Helium, Google, or Netflix.
+Helium and its logo belong to the [Helium project by imput](https://github.com/imputnet/helium). The transparent PNG icon comes from the [official Helium repository](https://github.com/imputnet/helium/blob/24409ea1dd0da4603aa87296f499370dfa4d5849/resources/branding/app_icon/raw.png). This utility is not affiliated with or endorsed by Helium, Google, or Netflix.
 
 The installer code and original custom PNG artwork are licensed under [MIT](LICENSE). The upstream Helium logo is not covered by this repository's MIT license. No Widevine binaries are redistributed here.
