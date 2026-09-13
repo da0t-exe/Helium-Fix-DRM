@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://helium.computer">
-    <img src="assets/helium.png" width="96" height="96" alt="Helium browser logo">
+    <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/helium.png" width="96" height="96" alt="Helium browser logo">
   </a>
 </p>
 
@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="assets/tests.png" width="176" height="35" alt="Tests / CI - view live results"></a>
-  <img src="assets/platform.png" width="176" height="35" alt="Platform: Windows">
-  <img src="assets/powershell.png" width="176" height="35" alt="PowerShell 5.1 and 7">
-  <a href="LICENSE"><img src="assets/license.png" width="176" height="35" alt="License: MIT"></a>
+  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/tests.png" width="176" height="35" alt="Tests / CI - view live results"></a>
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/platform.png" width="176" height="35" alt="Platform: Windows">
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/powershell.png" width="176" height="35" alt="PowerShell 5.1 and 7">
+  <a href="LICENSE"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/license.png" width="176" height="35" alt="License: MIT"></a>
 </p>
 
 <p align="center">
