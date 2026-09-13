@@ -3,3 +3,6 @@ Desktop.ini
 *.log
 *.tmp
 .DS_Store
+.test-download/
+*.har
+DIAGNOSTIC-NETFLIX.md
