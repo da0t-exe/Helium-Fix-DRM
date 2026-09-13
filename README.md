@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/tests.png" width="75" height="32" alt="Tests / CI - view live results"></a>
-  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/platform.png" width="75" height="32" alt="Platform: Windows">
-  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/powershell.png" width="126" height="32" alt="PowerShell 5.1 and 7">
-  <a href="LICENSE"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/license.png" width="43" height="32" alt="License: MIT"></a>
+  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/058b669949a9d574be2682e76d31307d5ebabe36/assets/tests.png" width="88" height="32" alt="Tests / CI - view live results"></a>
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/058b669949a9d574be2682e76d31307d5ebabe36/assets/platform.png" width="88" height="32" alt="Platform: Windows">
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/058b669949a9d574be2682e76d31307d5ebabe36/assets/powershell.png" width="148" height="32" alt="PowerShell 5.1 and 7">
+  <a href="LICENSE"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/058b669949a9d574be2682e76d31307d5ebabe36/assets/license.png" width="48" height="32" alt="License: MIT"></a>
 </p>
 
 <p align="center">
@@ -93,7 +93,7 @@ The task uses a locally saved installer. Run the enable command again after a sc
 | PowerShell 5.1 and 7 | Covered by automated tests. |
 | Google CDM files | Architecture, manifest, and Authenticode signature checked before installation. |
 | Encrypted playback in Helium | Depends on the browser and service; test with the [Bitmovin DRM demo](https://bitmovin.com/demos/drm). |
-| Netflix inside Helium | **Not fixed by this project.** Matching Chrome's Widevine version did not resolve the observed license rejection. |
+| Netflix inside Helium | **[Unresolved — issue #1](https://github.com/da0t-exe/Helium-Fix-DRM/issues/1).** Matching Chrome's Widevine version did not resolve the observed license rejection. |
 | Netflix in another browser | `-Netflix` opens a separate Edge or Chrome window. |
 
 ## Reference
