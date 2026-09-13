@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/tests.png" width="176" height="35" alt="Tests / CI - view live results"></a>
-  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/platform.png" width="176" height="35" alt="Platform: Windows">
-  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/powershell.png" width="176" height="35" alt="PowerShell 5.1 and 7">
-  <a href="LICENSE"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/eed72d09c6b65fa48f093ccc50e2258a75018028/assets/license.png" width="176" height="35" alt="License: MIT"></a>
+  <a href="https://github.com/da0t-exe/Helium-Fix-DRM/actions/workflows/test.yml"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/tests.png" width="75" height="32" alt="Tests / CI - view live results"></a>
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/platform.png" width="75" height="32" alt="Platform: Windows">
+  <img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/powershell.png" width="126" height="32" alt="PowerShell 5.1 and 7">
+  <a href="LICENSE"><img src="https://raw.githubusercontent.com/da0t-exe/Helium-Fix-DRM/f375180de2b91ca77ed804fe419c02d3e8f4cf63/assets/license.png" width="43" height="32" alt="License: MIT"></a>
 </p>
 
 <p align="center">
