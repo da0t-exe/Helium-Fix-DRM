@@ -97,4 +97,3 @@ Tests cover version selection, prevention of automatic downgrades, backups, roll
 ## License
 
 [MIT](../LICENSE). No Widevine binaries are redistributed in this repository.
-
